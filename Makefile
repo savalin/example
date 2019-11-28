@@ -3,7 +3,8 @@ APP_NAME=mem_leak_issue_example
 ## Hard limit for OOM killer
 MEM_LIMIT=10Gb
 ## MEM_SWAP=-1 - unlimited swapping (global limit used instead)
-MEM_SWAP=0
+## MEM_SWAP = MEM_LIMIT + swap
+MEM_SWAP=10Gb
 
 build:
 	$(info ******** PLEASE CHECK YOUR GO VERSION: must be go1.13.4 to reproduce OOM killing after ~10-12 iterations ******** )
