@@ -5,6 +5,14 @@ This example demonstrates the issues:
 - https://github.com/golang/go/issues/35858.
 - https://github.com/gonum/gonum/issues/1174
 
+## Problem
+We re-init some graph that uses a few gigabytes of heap on initialization.
+Old data never used after re-initialization (there are no any links) but memory consumption increases anyway.
+
+Each iteration leads to heap_sys/heap_idle increasing and finally to 137 exit code (out of memory).
+
+I reproduced this issue on mac os host machine (`Catalina` 10.15.7) and `Ubuntu 18.04` (5.4.0-51-generic and 5.5.0-050500-generic) 
+
 ## Usage
 Make sure you have go version >= v1.13 set as default (or edit Makefile) and Docker installed on your system.
 ```
