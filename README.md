@@ -1,5 +1,7 @@
 # example
 
+SEE LAST VERSION IN [MASTER BRANCH](https://github.com/savalin/example/tree/master)
+
 This example demonstrates the issues:
 - https://github.com/golang/go/issues/35890
 - https://github.com/golang/go/issues/35858.
@@ -31,9 +33,8 @@ Removing intermediate container a1765ec8a72c
  ---> 550ae674af6d
 Successfully built 550ae674af6d
 Successfully tagged mem_leak_issue_example:latest
-
-
-
+```
+```
 $ make run
 docker run -i -t --rm --memory 10Gb --memory-swap 10Gb --name="mem_leak_issue_example" mem_leak_issue_example
   => JSON parsed! 13695 edges found (data size: 1 Mb)
