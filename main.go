@@ -23,7 +23,7 @@ import (
 //   - Server: Docker Engine - Community v19.03.5
 //   - Client: Docker Engine - Community v19.03.5
 
-const edgesLimit = 11000 // please don't change this value. It's 'optimal' for success reproducing
+const edgesLimit = 9000 // please don't change this value. It's 'optimal' for success reproducing
 
 var (
 	current i.Loader
