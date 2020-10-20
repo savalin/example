@@ -80,6 +80,7 @@ func readEdgesFile() ([]i.Edge, error) {
 	if err != nil {
 		return nil, err
 	}
+	defer file.Close()
 
 	var b []byte
 	if b, err = ioutil.ReadAll(file); err != nil {

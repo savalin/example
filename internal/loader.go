@@ -1,9 +1,9 @@
 package internal
 
 import (
-	"gonum.org/v1/gonum/graph"
 	"math"
 
+	"gonum.org/v1/gonum/graph"
 	"gonum.org/v1/gonum/graph/path"
 	"gonum.org/v1/gonum/graph/simple"
 )
@@ -29,21 +29,21 @@ func (l *loader) Load(edges []Edge) {
 	l.dg = simple.NewWeightedDirectedGraph(0, math.Inf(1))
 
 	counter := 1
-	for _, e := range edges {
+	for i := range edges {
 		if l.edgesLimit > 0 && counter > l.edgesLimit {
 			break
 		}
 		var weight float64 = 99999 // default weight
-		if e.Weight > 0 {
-			weight = e.Weight
+		if edges[i].Weight > 0 {
+			weight = edges[i].Weight
 		}
 
-		w, ok := l.dg.Weight(e.From, e.To)
+		w, ok := l.dg.Weight(edges[i].From, edges[i].To)
 		if ok && w <= weight {
 			continue
 		}
 
-		weightedEdge := l.dg.NewWeightedEdge(simple.Node(e.From), simple.Node(e.To), weight)
+		weightedEdge := l.dg.NewWeightedEdge(simple.Node(edges[i].From), simple.Node(edges[i].To), weight)
 		l.dg.SetWeightedEdge(weightedEdge)
 
 		counter++
