@@ -11,17 +11,18 @@ import (
 
 // PROBLEM:
 // The app calculates all shortest paths and destroys data in loop (by same dataset loaded from json ~1Mb).
-// Using docker limits memory=10Gb and memory-swap=0 we faced OOM killing after ~10-12 iterations.
+// Using docker limits memory=10Gb and memory-swap=10Gb we faced OOM killing after a few iterations.
 //
 // reproduced using configuration:
 // Makefile (for docker container build):
 //   - MEM_LIMIT=10Gb
-//   - MEM_SWAP=0
+//   - MEM_SWAP=10Gb
 // Go version:
-//   - go1.13.4
+//   - >=go1.13
 // Docker:
 //   - Server: Docker Engine - Community v19.03.5
 //   - Client: Docker Engine - Community v19.03.5
+// Reproducible on Linux (tested on 5.4/5.4 kernels) and MacOS (tested on Catalina)
 
 const edgesLimit = 9000 // please don't change this value. It's 'optimal' for success reproducing
 
@@ -51,8 +52,12 @@ func main() {
 		// some 'old' pointer to previous graph version
 		old = current
 
+		//doFakeUsage(old)
+
 		// set new current graph
 		current = l
+
+		//doFakeUsage(current)
 
 		// remove old pointer after all previous graph consumers graceful termination
 		old = nil
@@ -70,7 +75,7 @@ func main() {
 	}
 }
 
-func readEdgesFile() ([]*i.Edge, error) {
+func readEdgesFile() ([]i.Edge, error) {
 	var file, err = os.Open("edges.json")
 	if err != nil {
 		return nil, err
@@ -81,7 +86,7 @@ func readEdgesFile() ([]*i.Edge, error) {
 		return nil, err
 	}
 
-	var edges []*i.Edge
+	var edges []i.Edge
 	if err = json.Unmarshal(b, &edges); err != nil {
 		return nil, err
 	}
@@ -89,4 +94,16 @@ func readEdgesFile() ([]*i.Edge, error) {
 	i.Log("JSON parsed! %d edges found (data size: %d Mb)", len(edges), len(b)/1024/1024)
 
 	return edges, nil
+}
+
+func doFakeUsage(l i.Loader) {
+	if l == nil {
+		return
+	}
+
+	var weight float64
+	for k:=0; k<100;k++ {
+		_,weight = l.RoutesByAllShortest(11, 12915)
+	}
+	i.Log("graph fake usage passed. %f", weight)
 }

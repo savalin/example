@@ -1,6 +1,7 @@
 package internal
 
 import (
+	"gonum.org/v1/gonum/graph"
 	"math"
 
 	"gonum.org/v1/gonum/graph/path"
@@ -8,7 +9,8 @@ import (
 )
 
 type Loader interface {
-	Load(edges []*Edge)
+	Load(edges []Edge)
+	RoutesByAllShortest(from, to int64) ([][]graph.Node, float64)
 }
 
 func NewLoader(edgesLimit int) *loader {
@@ -23,7 +25,7 @@ type loader struct {
 	allShortest path.AllShortest
 }
 
-func (l *loader) Load(edges []*Edge) {
+func (l *loader) Load(edges []Edge) {
 	l.dg = simple.NewWeightedDirectedGraph(0, math.Inf(1))
 
 	counter := 1
@@ -52,4 +54,8 @@ func (l *loader) Load(edges []*Edge) {
 	l.allShortest = path.DijkstraAllPaths(l.dg)
 
 	Log("all shortest created!")
+}
+
+func (l *loader) RoutesByAllShortest(from, to int64) ([][]graph.Node, float64) {
+	return l.allShortest.AllBetween(from, to)
 }
